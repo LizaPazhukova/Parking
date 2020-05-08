@@ -31,7 +31,7 @@ namespace CoolParking.BL.Tests
         [Fact]
         public void Parking_IsSingelton()
         {
-            var newParkingService = ParkingService(_withdrawTimer, _logTimer, _logService);
+            var newParkingService = new ParkingService(_withdrawTimer, _logTimer, _logService);
             var vehicle = new Vehicle("AA-0001-AA", VehicleType.Truck, 100);
             _parkingService.AddVehicle(vehicle);  
 

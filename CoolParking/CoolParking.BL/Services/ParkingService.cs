@@ -79,7 +79,12 @@ namespace CoolParking.BL.Services
 
         public void AddVehicle(Vehicle vehicle)
         {
-            if (parking.Vehicles.Count == Settings.Capacity || parking.Vehicles.SingleOrDefault(x => x.Id == vehicle.Id) != null)
+            if (parking.Vehicles.Count == Settings.Capacity)
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (parking.Vehicles.SingleOrDefault(x => x.Id == vehicle.Id) != null)
             {
                 throw new ArgumentException();
             }
@@ -133,6 +138,7 @@ namespace CoolParking.BL.Services
         {
             Vehicle vehicle = parking.Vehicles.SingleOrDefault(x => x.Id == vehicleId);
             if (vehicle == null) throw new ArgumentException();
+            if (vehicle.Balance < 0) throw new InvalidOperationException();
             parking.Vehicles.Remove(vehicle);
         }
 

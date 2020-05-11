@@ -17,7 +17,6 @@ namespace CoolParking.BL.Models
         public VehicleType VehicleType { get; }
         public decimal Balance { get; internal set; }
 
-        //Regex regex = new Regex(@"\[A-Z]{2}-\d{4}-\[A-Z]{2}");
         Regex regex = new Regex(@"[A-Z]{2}\-[0-9]{4}\-[A-Z]{2}");
 
         public Vehicle(string id, VehicleType vehicleType, decimal balance)

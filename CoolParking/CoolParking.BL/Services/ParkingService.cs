@@ -18,9 +18,12 @@ namespace CoolParking.BL.Services
         readonly ITimerService _withdrawTimer;
         readonly ITimerService _logTimer;
         readonly ILogService _logService;
+        private readonly Parking parking;
         private const int SecToMilisec = 1000;
         public ParkingService(ITimerService withdrawTimer, ITimerService logTimer, ILogService logService)
         {
+            parking = Parking.GetInstance();
+
             _withdrawTimer = withdrawTimer;
             _logTimer = logTimer;
             _logService = logService;
@@ -33,8 +36,6 @@ namespace CoolParking.BL.Services
             _withdrawTimer.Start();
             _logTimer.Start();
         }
-
-        private readonly Parking parking = Parking.GetInstance();
 
         private List<TransactionInfo> transactionInfos = new List<TransactionInfo>();
         private void Withdraw(Object source, System.Timers.ElapsedEventArgs e)
@@ -78,7 +79,11 @@ namespace CoolParking.BL.Services
 
         public void AddVehicle(Vehicle vehicle)
         {
-            if(parking.Vehicles.SingleOrDefault(x=>x.Id==vehicle.Id)!=null) throw new ArgumentException();
+            if (parking.Vehicles.Count == Settings.Capacity || parking.Vehicles.SingleOrDefault(x => x.Id == vehicle.Id) != null)
+            {
+                throw new ArgumentException();
+            }
+
             parking.Vehicles.Add(vehicle);
         }
 
@@ -89,6 +94,9 @@ namespace CoolParking.BL.Services
 
             _logTimer.Stop();
             _logTimer.Dispose();
+
+            parking.Vehicles = new List<Vehicle>();
+            parking.Balance = 0;
         }
 
         public decimal GetBalance()

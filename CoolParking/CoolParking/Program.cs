@@ -14,11 +14,14 @@ namespace CoolParking
             TimerService withdrawTimer = new TimerService();
             TimerService logTimer = new TimerService();
             LogService logService = new LogService(path);
-            ParkingService parking = new ParkingService(withdrawTimer, logTimer, logService );
-            bool showMenu = true;
-            while (showMenu)
+
+            using (ParkingService parking = new ParkingService(withdrawTimer, logTimer, logService))
             {
-                showMenu = MainMenu(parking);
+                bool showMenu = true;
+                while (showMenu)
+                {
+                    showMenu = MainMenu(parking);
+                }
             }
 
             Console.ReadLine();
@@ -110,7 +113,7 @@ namespace CoolParking
                     }
                     catch (ArgumentException)
                     {
-                        Console.WriteLine($"Error, vehicle with id:{id} and alance:{balance} can't be added");
+                        Console.WriteLine($"Error, vehicle with id:{id} and balance:{balance} can't be added");
                         return true;
                     }
                     Console.WriteLine($"Vehicle with id: {id} was added to the parking");

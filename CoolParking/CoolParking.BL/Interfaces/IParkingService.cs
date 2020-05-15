@@ -15,5 +15,6 @@ namespace CoolParking.BL.Interfaces
         void TopUpVehicle(string vehicleId, decimal sum);
         TransactionInfo[] GetLastParkingTransactions();
         string ReadFromLog();
+        Vehicle GetVehicleById(string id);
     }
 }

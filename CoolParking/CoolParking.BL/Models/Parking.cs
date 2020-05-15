@@ -1,6 +1,7 @@
 ﻿// TODO: implement class Parking.
 //       Implementation details are up to you, they just have to meet the requirements 
 //       of the home task and be consistent with other classes and tests.
+using System;
 using System.Collections.Generic;
 
 namespace CoolParking.BL.Models
@@ -11,15 +12,7 @@ namespace CoolParking.BL.Models
         public List<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
         private Parking() { }
       
-        private static Parking parking;
-        public static Parking GetInstance()
-        {
-            if (parking == null)
-            {
-                parking = new Parking();
-            }
-
-            return parking;
-        }
+        private static readonly Lazy<Parking> lazy = new Lazy<Parking>(() => new Parking());
+        public static Parking GetInstance { get { return lazy.Value; } }
     }
 }

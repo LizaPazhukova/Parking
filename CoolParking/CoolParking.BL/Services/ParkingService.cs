@@ -22,7 +22,7 @@ namespace CoolParking.BL.Services
         private const int SecToMilisec = 1000;
         public ParkingService(ITimerService withdrawTimer, ITimerService logTimer, ILogService logService)
         {
-            parking = Parking.GetInstance();
+            parking = Parking.GetInstance;
 
             _withdrawTimer = withdrawTimer;
             _logTimer = logTimer;
@@ -79,14 +79,18 @@ namespace CoolParking.BL.Services
 
         public void AddVehicle(Vehicle vehicle)
         {
+            if (!Vehicle.ValidateId(vehicle.Id))
+            {
+                throw new ArgumentException($"{vehicle.Id} - is invalid type of Id");
+            }
             if (parking.Vehicles.Count == Settings.Capacity)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("No free places on the parking");
             }
 
             if (parking.Vehicles.SingleOrDefault(x => x.Id == vehicle.Id) != null)
             {
-                throw new ArgumentException();
+                throw new ArgumentException($"The vehicle with Id: {vehicle.Id} is already exist");
             }
 
             parking.Vehicles.Add(vehicle);
@@ -128,6 +132,12 @@ namespace CoolParking.BL.Services
         {
             return parking.Vehicles.AsReadOnly();
         }
+        public Vehicle GetVehicleById(string vehicleId)
+        {
+            if (!Vehicle.ValidateId(vehicleId)) throw new ArgumentException($"{vehicleId} - is invalid type of Id");
+            var vehicle = parking.Vehicles.SingleOrDefault(x => x.Id == vehicleId);
+            return vehicle;
+        }
 
         public string ReadFromLog()
         {
@@ -136,16 +146,17 @@ namespace CoolParking.BL.Services
 
         public void RemoveVehicle(string vehicleId)
         {
+           
             Vehicle vehicle = parking.Vehicles.SingleOrDefault(x => x.Id == vehicleId);
-            if (vehicle == null) throw new ArgumentException();
-            if (vehicle.Balance < 0) throw new InvalidOperationException();
+            if (vehicle == null) throw new ArgumentException($"Cannot find vehicle with this Id: {vehicleId}");
+            if (vehicle.Balance < 0) throw new InvalidOperationException("Cannot remove vehicle with negative balance");
             parking.Vehicles.Remove(vehicle);
         }
 
         public void TopUpVehicle(string vehicleId, decimal sum)
         {
             Vehicle vehicle = parking.Vehicles.SingleOrDefault(x => x.Id == vehicleId);
-            if (vehicle == null || sum < 0) throw new ArgumentException();
+            if (vehicle == null || sum < 0) throw new ArgumentException($"Cannot find vehicle with Id: {vehicleId} or sum is negative");
             vehicle.Balance += sum;
         }
     }

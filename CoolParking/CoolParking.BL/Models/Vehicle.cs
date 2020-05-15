@@ -13,11 +13,12 @@ namespace CoolParking.BL.Models
 {
     public class Vehicle
     {
-        public string Id { get; }
-        public VehicleType VehicleType { get; }
-        public decimal Balance { get; internal set; }
+        public string Id { get; set; }
+        public VehicleType VehicleType { get; set; }
+        public decimal Balance { get; set; }
 
-        Regex regex = new Regex(@"[A-Z]{2}\-[0-9]{4}\-[A-Z]{2}");
+        static Regex regex = new Regex(@"[A-Z]{2}\-[0-9]{4}\-[A-Z]{2}");
+        public Vehicle() { }
 
         public Vehicle(string id, VehicleType vehicleType, decimal balance)
         {
@@ -32,6 +33,10 @@ namespace CoolParking.BL.Models
             Xeger generator = new Xeger(regexString);
             string result = generator.Generate();
             return result;
+        }
+        public static bool ValidateId(string id)
+        {
+            return regex.IsMatch(id);
         }
     }
 }

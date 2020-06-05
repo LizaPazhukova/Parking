@@ -22,7 +22,7 @@ namespace CoolParking.WebAPI
         {
             services.AddControllers();
 
-            services.AddSingleton<IParkingService, ParkingService>(p => new ParkingService(new TimerService(), new TimerService(), new LogService("Transactions.log")));
+            services.AddTransient<IParkingService, ParkingService>(p => new ParkingService(new TimerService(), new TimerService(), new LogService("Transactions.log")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
